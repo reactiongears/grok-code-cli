@@ -1,0 +1,1049 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Fix Critical Import Dependencies and Session Management",
+      "description": "Resolve missing imports in agent.py and tools.py, fix session management issues, and implement proper API key handling",
+      "details": "Fix import errors: get_permissions import in agent.py:61, prompt_toolkit.prompt import in agent.py:68, update_permissions import in tools.py:105. Replace prompt_toolkit.prompt() with session instance usage. Change global API key setting to per-request passing. Ensure proper session lifecycle management. See tasks/architecture/arch_001.md for detailed implementation guidance.",
+      "testStrategy": "Verify all modules import successfully without ImportError exceptions. Test session prompts work correctly. Validate API key is passed per request rather than set globally. Run existing functionality to ensure no regressions.",
+      "priority": "high",
+      "phase": "Phase 1: Critical Fixes",
+      "dependencies": [],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Fix missing imports in agent.py",
+          "description": "Add missing imports for get_permissions and prompt_toolkit.prompt in agent.py",
+          "dependencies": [],
+          "details": "Import get_permissions function from config module and prompt function from prompt_toolkit to resolve undefined references. See tasks/architecture/arch_001.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Fix missing imports in tools.py",
+          "description": "Add missing import for update_permissions function in tools.py",
+          "dependencies": [],
+          "details": "Import update_permissions function from config module to resolve undefined reference in tools.py. See tasks/architecture/arch_001.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Replace prompt_toolkit.prompt() with session instance usage",
+          "description": "Update all direct prompt_toolkit.prompt() calls to use the session instance instead",
+          "dependencies": [
+            1
+          ],
+          "details": "Replace direct prompt() calls with session.prompt() to ensure consistent prompt handling and avoid potential conflicts. See tasks/architecture/arch_001.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Change global API key setting to per-request passing",
+          "description": "Modify API key handling from global setting to per-request parameter passing",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Update the API client configuration to pass API key as parameter for each request instead of setting it globally. See tasks/architecture/arch_001.md for detailed implementation guidance.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Implement Comprehensive Security Framework",
+      "description": "Conduct security audit and implement robust security controls including input validation, command sanitization, and permission enforcement",
+      "details": "Execute comprehensive security audit covering authentication, command execution, input validation, and file system access. Implement security measures: input sanitization for all user inputs, command whitelist/blacklist validation, secure file path handling to prevent directory traversal, API key protection, rate limiting, enhanced permission system with granular controls, and security auditing/logging for privileged operations. See tasks/architecture/arch_002.md for detailed implementation guidance.",
+      "testStrategy": "Security testing with malicious inputs, penetration testing for command injection, validation of permission controls, automated security scanning, and security compliance verification",
+      "priority": "high",
+      "phase": "Phase 2: Security & Stability",
+      "dependencies": [
+        1
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Conduct security audit and threat assessment",
+          "description": "Perform comprehensive security analysis of the Grok CLI codebase to identify vulnerabilities, attack vectors, and security gaps in current implementation",
+          "dependencies": [],
+          "details": "Review code for common security issues like command injection, path traversal, insecure API handling, and privilege escalation. Document findings and prioritize remediation efforts. See tasks/architecture/arch_002.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Implement input sanitization framework",
+          "description": "Create robust input validation and sanitization system for all user inputs, commands, and API parameters",
+          "dependencies": [
+            1
+          ],
+          "details": "Develop functions to sanitize user prompts, file paths, command arguments, and configuration values. Implement encoding/escaping mechanisms and input length limits. See tasks/architecture/arch_002.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Create command validation and whitelist/blacklist system",
+          "description": "Implement comprehensive command filtering system with configurable whitelist/blacklist for bash commands and tool execution",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Extend existing permission system with pattern matching, regex-based filtering, and context-aware command validation. Include dangerous command detection and blocking. See tasks/architecture/arch_002.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Implement secure file path handling",
+          "description": "Create secure file operations with path traversal prevention, access control, and sandbox restrictions",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Implement path canonicalization, directory traversal prevention, file permission checks, and restricted file access zones. Prevent access to sensitive system files. See tasks/architecture/arch_002.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Add API key protection mechanisms",
+          "description": "Implement secure storage, transmission, and handling of API keys and authentication tokens",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Add encryption for stored credentials, secure memory handling, token rotation capabilities, and prevent API key exposure in logs or error messages. See tasks/architecture/arch_002.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Implement rate limiting system",
+          "description": "Create rate limiting mechanisms to prevent abuse and protect against DoS attacks",
+          "dependencies": [
+            1
+          ],
+          "details": "Implement request throttling for API calls, command execution limits, and resource usage controls. Add configurable rate limits and cooldown periods. See tasks/architecture/arch_002.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 7,
+          "title": "Create enhanced permission system with granular controls",
+          "description": "Develop advanced permission framework with role-based access control and fine-grained security policies",
+          "dependencies": [
+            1,
+            3,
+            4
+          ],
+          "details": "Extend current permission system with user roles, resource-specific permissions, time-based access controls, and audit trails for permission changes. See tasks/architecture/arch_002.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 8,
+          "title": "Add security auditing and logging framework",
+          "description": "Implement comprehensive security logging, monitoring, and alerting system for suspicious activities",
+          "dependencies": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "details": "Create secure logging mechanisms, anomaly detection, security event correlation, and alerting system. Ensure logs don't contain sensitive information. See tasks/architecture/arch_002.md for detailed implementation guidance.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Implement File Operations Tool Suite",
+      "description": "Add comprehensive file operation tools including read_file, list_files, find_files, and grep_files",
+      "details": "Implement file operation toolset: read_file with line number support and binary file detection, list_files with directory listing and filtering, find_files with pattern matching and search capabilities, grep_files for content search across files. Add proper error handling, validation, file size limits, and safety checks for all operations. See tasks/architecture/arch_003.md for detailed implementation guidance.",
+      "testStrategy": "Unit tests for each file operation tool, integration tests with various file types, error handling tests for edge cases, performance tests with large files and directories",
+      "priority": "high",
+      "phase": "Phase 3: Core Features",
+      "dependencies": [
+        2
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Implement read_file tool with line number support and binary detection",
+          "description": "Create a tool that can read file contents with optional line number display and automatic binary file detection to prevent corrupted output",
+          "dependencies": [],
+          "details": "Develop read_file functionality that handles text files with line numbers, detects binary files to avoid display issues, supports encoding detection, and provides proper error handling for file access permissions and non-existent files. See tasks/architecture/arch_003.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Create list_files tool with directory listing and filtering",
+          "description": "Build a tool for listing directory contents with filtering capabilities for file types, hidden files, and directory traversal options",
+          "dependencies": [],
+          "details": "Implement directory listing functionality with support for recursive traversal, file type filtering, show/hide hidden files, size information, and proper handling of permission errors and symbolic links. See tasks/architecture/arch_003.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Build find_files tool with pattern matching capabilities",
+          "description": "Develop a file search tool that supports glob patterns, regular expressions, and various search criteria for locating files across the filesystem",
+          "dependencies": [],
+          "details": "Create find functionality supporting glob patterns, regex matching, file size filters, modification date ranges, and efficient search algorithms while respecting system permissions and handling large directory structures. See tasks/architecture/arch_003.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Develop grep_files tool for content search",
+          "description": "Implement a content search tool that can search for patterns within files, supporting regex, case sensitivity options, and result formatting",
+          "dependencies": [
+            1
+          ],
+          "details": "Build grep functionality with regex support, case-insensitive options, context lines, line number reporting, and integration with the read_file tool for consistent file handling and binary detection. See tasks/architecture/arch_003.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Add comprehensive error handling and safety checks for all file operations",
+          "description": "Implement robust error handling, security checks, and safety measures across all file operation tools to prevent unauthorized access and system damage",
+          "dependencies": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "details": "Develop comprehensive error handling for permission denied, file not found, disk space issues, path traversal attacks, symlink handling, and implement safety checks to prevent access to sensitive system files and directories. See tasks/architecture/arch_003.md for detailed implementation guidance.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Implement Development Workflow Tools",
+      "description": "Add essential development tools including test execution, code linting, git operations, and dependency management",
+      "details": "Implement development toolset: run_tests with framework auto-detection (pytest, unittest, jest, etc.), lint_code with multiple linter support, git_operations (status, diff, commit, push, pull), install_dependencies with package manager detection (pip, npm, yarn, etc.). Provide unified interface for different frameworks with proper error handling and user feedback. See tasks/architecture/arch_004.md for detailed implementation guidance.",
+      "testStrategy": "Integration tests with real projects using different frameworks, test framework detection accuracy, git operation validation, dependency installation verification",
+      "priority": "high",
+      "phase": "Phase 3: Core Features",
+      "dependencies": [
+        3
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Implement run_tests with framework auto-detection",
+          "description": "Create a test runner that automatically detects and executes tests using pytest, unittest, jest, and other common testing frameworks",
+          "dependencies": [],
+          "details": "Build framework detection logic by checking for config files (pytest.ini, jest.config.js, etc.), package.json scripts, and file patterns. Implement unified test execution with proper output parsing and result reporting. See tasks/architecture/arch_004.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Create lint_code with multiple linter support",
+          "description": "Develop a code linting tool that supports multiple linters like pylint, flake8, eslint, and provides unified output formatting",
+          "dependencies": [],
+          "details": "Implement linter auto-detection based on project structure and config files. Create standardized output format for different linter results. Add configuration file discovery and custom rule support. See tasks/architecture/arch_004.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Build git_operations suite",
+          "description": "Create comprehensive git operations including status, diff, commit, push, pull with proper error handling and user feedback",
+          "dependencies": [],
+          "details": "Implement git command wrappers with proper error handling, status checking, and user prompts. Add support for common workflows like staged changes, branch management, and remote operations. See tasks/architecture/arch_004.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Implement install_dependencies with package manager detection",
+          "description": "Build dependency installation system that auto-detects package managers (pip, npm, yarn, cargo) and installs required packages",
+          "dependencies": [],
+          "details": "Create package manager detection logic based on lock files and project structure. Implement installation commands with proper error handling and dependency resolution. Add support for virtual environments and package scopes. See tasks/architecture/arch_004.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Create unified interface for different frameworks",
+          "description": "Design and implement a common interface that abstracts framework-specific operations behind a consistent API",
+          "dependencies": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "details": "Build abstraction layer that provides consistent method signatures and return formats across all development tools. Create plugin system for easy framework extension and configuration management. See tasks/architecture/arch_004.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Add comprehensive error handling and user feedback systems",
+          "description": "Implement robust error handling, logging, and user feedback mechanisms across all development tools",
+          "dependencies": [
+            5
+          ],
+          "details": "Create centralized error handling with detailed error messages, recovery suggestions, and logging. Implement progress indicators, success/failure notifications, and interactive prompts for user decisions. See tasks/architecture/arch_004.md for detailed implementation guidance.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Implement Network and System Tools",
+      "description": "Add network and system operation tools including HTTP requests, system information, and process management",
+      "details": "Implement system toolset: http_request for API calls with proper authentication and error handling, system_info for environment and system details, process_management for process listing and control, environment_variables for env var management. Include proper security controls and validation for all system operations. See tasks/architecture/arch_005.md for detailed implementation guidance.",
+      "testStrategy": "Unit tests for each system tool, integration tests with real APIs and system calls, security validation for system operations, error handling tests",
+      "priority": "medium",
+      "phase": "Phase 3: Core Features",
+      "dependencies": [
+        4
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Implement HTTP Request Tool",
+          "description": "Create a robust HTTP request tool with authentication support, comprehensive error handling, and request/response validation",
+          "dependencies": [],
+          "details": "Build http_request tool that supports multiple HTTP methods (GET, POST, PUT, DELETE), handles various authentication schemes (Bearer tokens, API keys, basic auth), implements proper timeout handling, SSL verification, and structured error responses with status codes and messages. See tasks/architecture/arch_005.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Create System Information Tool",
+          "description": "Develop a system_info tool that gathers comprehensive environment and system details across different operating systems",
+          "dependencies": [],
+          "details": "Implement cross-platform system information gathering including OS version, hardware specs, environment variables, network configuration, disk usage, memory usage, and running processes while ensuring compatibility with Windows, macOS, and Linux. See tasks/architecture/arch_005.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Build Process Management Tool",
+          "description": "Implement process_management tool for listing, monitoring, and controlling system processes with proper permissions",
+          "dependencies": [
+            2
+          ],
+          "details": "Create functionality to list running processes with details (PID, name, CPU/memory usage), start/stop processes safely, monitor process status, and handle process signals while implementing proper permission checks and security validations. See tasks/architecture/arch_005.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Implement Environment Variables Management",
+          "description": "Build environment_variables tool for reading, setting, and managing environment variables with validation and security controls",
+          "dependencies": [
+            2
+          ],
+          "details": "Develop secure environment variable management that can read system and user environment variables, set temporary variables for process scope, validate variable names and values, and prevent access to sensitive system variables with proper sanitization. See tasks/architecture/arch_005.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Add Security Controls and Validation",
+          "description": "Implement comprehensive security controls, input validation, and safety measures for all system operation tools",
+          "dependencies": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "details": "Add security layer with input sanitization, command injection prevention, privilege escalation protection, audit logging, rate limiting, and comprehensive validation for all system tools to ensure safe operation in production environments. See tasks/architecture/arch_005.md for detailed implementation guidance.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Implement Error Handling and Logging Framework",
+      "description": "Create comprehensive error handling framework with centralized logging, user-friendly error messages, and retry mechanisms",
+      "details": "Implement centralized error handling framework: structured logging with different log levels, user-friendly error message formatting, retry mechanisms for transient failures, error recovery strategies, debugging capabilities with stack traces for developers, and error reporting system for tracking issues. See tasks/architecture/arch_006.md for detailed implementation guidance.",
+      "testStrategy": "Unit tests for error handling scenarios, integration tests with forced failures, logging output validation, retry mechanism testing, user experience testing for error messages",
+      "priority": "medium",
+      "phase": "Phase 4: Architecture",
+      "dependencies": [
+        5
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Design and implement centralized error handling framework with structured logging",
+          "description": "Create a comprehensive error handling framework that captures, categorizes, and logs errors in a structured format across the entire application",
+          "dependencies": [],
+          "details": "Implement error classes hierarchy, centralized error handler, structured logging with different log levels, error categorization system, and integration points for all components. See tasks/architecture/arch_006.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Create user-friendly error message formatting system",
+          "description": "Develop a system to translate technical errors into clear, actionable messages for end users with appropriate context and guidance",
+          "dependencies": [
+            1
+          ],
+          "details": "Design error message templates, implement message formatting logic, create context-aware error descriptions, and establish user guidance for common error scenarios. See tasks/architecture/arch_006.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Implement retry mechanisms for transient failures with recovery strategies",
+          "description": "Build automatic retry logic for recoverable errors with exponential backoff, circuit breaker patterns, and intelligent failure detection",
+          "dependencies": [
+            1
+          ],
+          "details": "Implement retry decorators, exponential backoff algorithms, circuit breaker implementation, transient error detection, and recovery strategy selection based on error types. See tasks/architecture/arch_006.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Add debugging capabilities and error reporting system",
+          "description": "Create comprehensive debugging tools and automated error reporting mechanisms to help with troubleshooting and system monitoring",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Implement debug mode with detailed error traces, error reporting to external systems, error analytics dashboard, stack trace capture and analysis, and integration with monitoring systems. See tasks/architecture/arch_006.md for detailed implementation guidance.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Improve Configuration Management System",
+      "description": "Enhance configuration system with validation, schema support, migration capabilities, and environment-specific settings",
+      "details": "Upgrade configuration management: implement configuration validation with JSON schema, add configuration migration system for version upgrades, support environment-specific configurations (dev, staging, prod), add more granular configuration options, implement configuration backup and restore, and provide configuration validation CLI commands. See tasks/architecture/arch_007.md for detailed implementation guidance.",
+      "testStrategy": "Configuration validation tests, migration testing between versions, environment-specific configuration validation, backup/restore functionality testing",
+      "priority": "medium",
+      "phase": "Phase 4: Architecture",
+      "dependencies": [
+        6
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Implement configuration validation with JSON schema",
+          "description": "Create JSON schema definitions for user and project configuration files and implement validation logic to ensure configuration integrity",
+          "dependencies": [],
+          "details": "Define JSON schemas for settings.json structure, implement validation functions in config.py, add error handling for invalid configurations, and create unit tests for validation logic. See tasks/architecture/arch_007.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Add configuration migration system for version upgrades",
+          "description": "Implement automatic configuration migration to handle updates between different versions of the configuration schema",
+          "dependencies": [
+            1
+          ],
+          "details": "Create migration scripts for configuration versions, implement version tracking in config files, add backward compatibility checks, and handle graceful upgrades of existing configurations. See tasks/architecture/arch_007.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Support environment-specific configurations (dev, staging, prod)",
+          "description": "Add support for environment-specific configuration overrides and management",
+          "dependencies": [
+            1
+          ],
+          "details": "Implement environment detection and configuration layering, create environment-specific settings files, add environment switching commands, and update configuration loading logic to support multiple environments. See tasks/architecture/arch_007.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Implement configuration backup, restore, and validation CLI commands",
+          "description": "Create CLI commands for backing up, restoring, and validating configuration files",
+          "dependencies": [
+            1,
+            2,
+            3
+          ],
+          "details": "Add slash commands for /config backup, /config restore, /config validate, implement backup file management, create restore confirmation prompts, and add configuration health checks. See tasks/architecture/arch_007.md for detailed implementation guidance.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Design and Implement Plugin Architecture",
+      "description": "Create extensible plugin system for custom tools with plugin discovery, loading, and management capabilities",
+      "details": "Design plugin architecture: plugin discovery and loading system, plugin API specification, plugin management CLI commands (install, uninstall, list, enable, disable), plugin development documentation and templates, plugin sandboxing for security, and plugin marketplace integration preparation. See tasks/architecture/arch_008.md for detailed implementation guidance.",
+      "testStrategy": "Plugin loading and discovery tests, plugin API validation, plugin management command testing, security isolation testing, documentation completeness validation",
+      "priority": "low",
+      "phase": "Phase 4: Architecture",
+      "dependencies": [
+        7
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Design plugin architecture and API specification",
+          "description": "Define the plugin system architecture, create API specifications for plugin interfaces, and establish plugin lifecycle management patterns",
+          "dependencies": [],
+          "details": "Design plugin interface contracts, define plugin metadata structure, establish communication protocols between plugins and core system, and create plugin lifecycle hooks (load, initialize, execute, cleanup). See tasks/architecture/arch_008.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Implement plugin discovery and loading system",
+          "description": "Build the core plugin discovery mechanism and dynamic loading infrastructure to locate and instantiate plugins at runtime",
+          "dependencies": [
+            1
+          ],
+          "details": "Create plugin registry system, implement plugin scanning from designated directories, build dynamic module loading with error handling, and establish plugin dependency resolution. See tasks/architecture/arch_008.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Create plugin management CLI commands",
+          "description": "Develop CLI commands for plugin operations including install, uninstall, list, enable, and disable functionality",
+          "dependencies": [
+            2
+          ],
+          "details": "Implement slash commands for plugin management, create plugin installation from remote sources, build plugin state persistence, and add plugin configuration management. See tasks/architecture/arch_008.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Build plugin sandboxing for security",
+          "description": "Implement security measures to isolate plugins and prevent malicious code execution while maintaining necessary functionality",
+          "dependencies": [
+            2
+          ],
+          "details": "Create restricted execution environments for plugins, implement permission-based access controls, establish resource limits and monitoring, and build plugin signature verification. See tasks/architecture/arch_008.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Create plugin development documentation and templates",
+          "description": "Develop comprehensive documentation for plugin developers including API references, templates, and best practices",
+          "dependencies": [
+            1
+          ],
+          "details": "Write plugin development guide, create starter templates for common plugin types, document API endpoints and hooks, and provide example implementations. See tasks/architecture/arch_008.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Implement plugin validation and testing framework",
+          "description": "Build automated validation system for plugin integrity, compatibility testing, and quality assurance mechanisms",
+          "dependencies": [
+            4,
+            5
+          ],
+          "details": "Create plugin validation pipeline, implement compatibility checking against API versions, build automated testing framework for plugins, and establish plugin quality metrics. See tasks/architecture/arch_008.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 7,
+          "title": "Prepare plugin marketplace integration foundation",
+          "description": "Establish the foundational infrastructure for plugin marketplace integration including metadata standards and distribution mechanisms",
+          "dependencies": [
+            3,
+            6
+          ],
+          "details": "Define plugin marketplace metadata schema, implement plugin packaging and distribution formats, create plugin authentication and signing infrastructure, and build marketplace API integration points. See tasks/architecture/arch_008.md for detailed implementation guidance.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Implement Conversation Management System",
+      "description": "Add conversation persistence, history management, context optimization, and multi-conversation support",
+      "details": "Implement conversation features: conversation persistence across sessions using local storage, conversation history with search capabilities, context management and optimization to handle token limits, multi-conversation support with session switching, conversation export/import functionality, and conversation analytics for usage insights. See tasks/architecture/arch_009.md for detailed implementation guidance.",
+      "testStrategy": "Conversation persistence tests, history search functionality validation, context optimization effectiveness testing, multi-session management testing",
+      "priority": "low",
+      "phase": "Phase 5: Advanced Features",
+      "dependencies": [
+        8
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Local Storage Persistence Implementation",
+          "description": "Implement local storage system to persist conversation history across sessions",
+          "dependencies": [],
+          "details": "Create storage layer using JSON files or SQLite database to save conversation messages, metadata, and session information with proper error handling and data validation. See tasks/architecture/arch_009.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Conversation History Search and Indexing",
+          "description": "Build search functionality to find specific conversations and messages",
+          "dependencies": [
+            1
+          ],
+          "details": "Implement text indexing system with search algorithms to query conversation history by keywords, dates, or message content with performance optimization. See tasks/architecture/arch_009.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Context Optimization Algorithms",
+          "description": "Develop algorithms to manage conversation context size and relevance",
+          "dependencies": [
+            1
+          ],
+          "details": "Create smart context pruning system that maintains conversation coherence while staying within API limits, including message summarization and importance scoring. See tasks/architecture/arch_009.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Multi-Session Management",
+          "description": "Implement system to handle multiple concurrent conversation sessions",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Build session management with unique identifiers, session switching capabilities, and isolation between different conversation contexts. See tasks/architecture/arch_009.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Export/Import Functionality",
+          "description": "Create features to export and import conversation data",
+          "dependencies": [
+            1,
+            4
+          ],
+          "details": "Implement export to various formats (JSON, text, markdown) and import functionality to restore conversations from backup files with data integrity validation. See tasks/architecture/arch_009.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Analytics Tracking System",
+          "description": "Build analytics system to track conversation metrics and usage patterns",
+          "dependencies": [
+            1,
+            2,
+            4
+          ],
+          "details": "Create analytics dashboard showing conversation statistics, token usage, session duration, and user interaction patterns with privacy-conscious data collection. See tasks/architecture/arch_009.md for detailed implementation guidance.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Implement Project Intelligence Features",
+      "description": "Add project context understanding, automatic project type detection, and intelligent code recommendations",
+      "details": "Implement project intelligence: automatic project type detection based on files and structure, project context understanding for better recommendations, smart file recommendations based on current task, code analysis and insights, dependency analysis and suggestions, and project health monitoring. See tasks/architecture/arch_010.md for detailed implementation guidance.",
+      "testStrategy": "Project type detection accuracy testing, context understanding validation, recommendation quality assessment, code analysis accuracy verification",
+      "priority": "low",
+      "phase": "Phase 5: Advanced Features",
+      "dependencies": [
+        9
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "File-based Project Type Detection Algorithm",
+          "description": "Implement algorithm to automatically detect project type based on file patterns, directory structure, and configuration files",
+          "dependencies": [],
+          "details": "Create detection logic for common project types (Python, JavaScript/Node.js, Java, C#, Go, Rust, etc.) by analyzing presence of specific files like package.json, requirements.txt, pom.xml, Cargo.toml, .gitignore patterns, and directory structures. See tasks/architecture/arch_010.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Context Analysis Engine",
+          "description": "Build engine to analyze project context including codebase size, complexity metrics, and architectural patterns",
+          "dependencies": [
+            1
+          ],
+          "details": "Develop system to analyze code metrics such as lines of code, cyclomatic complexity, file count, directory depth, import/dependency patterns, and identify architectural patterns like MVC, microservices, monolith structures. See tasks/architecture/arch_010.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Recommendation System Implementation",
+          "description": "Create intelligent recommendation system that suggests tools, best practices, and configurations based on project analysis",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Implement recommendation engine that suggests appropriate development tools, linting configurations, testing frameworks, CI/CD pipelines, and development practices based on detected project type and context analysis. See tasks/architecture/arch_010.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Code Analysis Integration",
+          "description": "Integrate static code analysis tools and create unified analysis pipeline for multiple programming languages",
+          "dependencies": [
+            1
+          ],
+          "details": "Integrate language-specific static analysis tools (pylint, ESLint, SonarQube, etc.) and create abstraction layer to provide unified code quality metrics, security vulnerability detection, and code smell identification. See tasks/architecture/arch_010.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Dependency Graph Analysis",
+          "description": "Build system to analyze and visualize project dependencies, identify potential issues and optimization opportunities",
+          "dependencies": [
+            1,
+            4
+          ],
+          "details": "Create dependency graph analyzer that maps internal and external dependencies, identifies circular dependencies, outdated packages, security vulnerabilities, and suggests dependency optimization strategies. See tasks/architecture/arch_010.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Health Monitoring Metrics",
+          "description": "Implement comprehensive project health monitoring system with key performance indicators and trend analysis",
+          "dependencies": [
+            2,
+            4,
+            5
+          ],
+          "details": "Develop health monitoring dashboard that tracks code quality trends, dependency health, test coverage, build success rates, and provides actionable insights for maintaining project health over time. See tasks/architecture/arch_010.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 7,
+          "title": "Machine Learning Model Integration",
+          "description": "Integrate ML models for advanced pattern recognition, anomaly detection, and predictive project insights",
+          "dependencies": [
+            2,
+            3,
+            6
+          ],
+          "details": "Implement machine learning components for advanced project analysis including code pattern recognition, anomaly detection in project metrics, predictive modeling for project maintenance needs, and continuous improvement of recommendation accuracy. See tasks/architecture/arch_010.md for detailed implementation guidance.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "Implement Integration and Automation Features",
+      "description": "Add IDE integration support, CI/CD pipeline integration, external service integrations, and automation capabilities",
+      "details": "Implement integration features: IDE integration support (VS Code, JetBrains, etc.), CI/CD pipeline integration with popular platforms, external service integrations (GitHub, GitLab, Slack, etc.), webhook support for automation, and custom automation script support. See tasks/architecture/arch_011.md for detailed implementation guidance.",
+      "testStrategy": "IDE integration testing, CI/CD pipeline validation, external service integration testing, webhook functionality verification",
+      "priority": "low",
+      "phase": "Phase 5: Advanced Features",
+      "dependencies": [
+        10
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "IDE Plugin Development and Communication Protocols",
+          "description": "Develop IDE plugins for popular editors (VS Code, IntelliJ, etc.) with bidirectional communication protocols to enable seamless integration with the Grok CLI",
+          "dependencies": [],
+          "details": "Create plugin architecture, implement language server protocol support, establish secure communication channels between IDE and CLI, and develop plugin installation/update mechanisms. See tasks/architecture/arch_011.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "CI/CD Platform API Integrations",
+          "description": "Build integrations with major CI/CD platforms (GitHub Actions, GitLab CI, Jenkins, etc.) to enable automated workflow triggers and status reporting",
+          "dependencies": [],
+          "details": "Implement platform-specific API clients, create workflow templates, establish event-driven triggers, and develop status reporting mechanisms for build/deployment processes. See tasks/architecture/arch_011.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "External Service Authentication and Webhook Systems",
+          "description": "Implement secure authentication mechanisms and webhook handling for various external services and third-party integrations",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Design OAuth2/API key management system, implement webhook receivers and processors, create secure credential storage, and establish service-specific authentication flows. See tasks/architecture/arch_011.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Automation Script Engine",
+          "description": "Develop a flexible automation engine that can execute custom scripts and workflows based on integration events and user-defined triggers",
+          "dependencies": [
+            2,
+            3
+          ],
+          "details": "Create script execution environment, implement event-driven automation triggers, develop script templating system, and establish error handling and logging mechanisms. See tasks/architecture/arch_011.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Integration Testing Framework",
+          "description": "Build comprehensive testing framework to validate all integration features, including mock services, automated testing pipelines, and integration validation",
+          "dependencies": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "details": "Develop mock service infrastructure, create automated test suites for each integration, implement end-to-end testing workflows, and establish continuous integration validation processes. See tasks/architecture/arch_011.md for detailed implementation guidance.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Implement Comprehensive Testing Framework",
+      "description": "Create complete test suite with unit, integration, security, and performance tests plus automated CI/CD pipeline",
+      "details": "Develop comprehensive testing framework: unit tests for all core functionality using pytest, integration tests for tool interactions, security/penetration testing suite, performance benchmarks and load testing, user acceptance test protocols, automated CI/CD pipeline with test coverage reporting, and cross-platform compatibility validation for Python 3.8+ on Windows, macOS, and Linux. See tasks/architecture/arch_012.md for detailed implementation guidance.",
+      "testStrategy": "Multi-layered testing approach with pytest framework, security scanning tools, performance profiling, automated cross-platform testing in CI/CD pipeline, and test coverage validation",
+      "priority": "high",
+      "phase": "Phase 3: Core Features",
+      "dependencies": [
+        5
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Unit Test Suite with Pytest Configuration",
+          "description": "Set up comprehensive unit test suite using pytest with proper configuration, fixtures, and test discovery for all core modules",
+          "dependencies": [],
+          "details": "Create pytest.ini configuration, test fixtures for mocking API calls and file operations, unit tests for agent.py, config.py, tools.py, slash_commands.py, and main.py with proper test isolation and coverage reporting. See tasks/architecture/arch_012.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Integration Test Scenarios for Tool Interactions",
+          "description": "Develop integration tests that verify tool interactions, permission systems, and end-to-end workflows",
+          "dependencies": [
+            1
+          ],
+          "details": "Create integration tests for file editing workflows, bash command execution with permission checks, MCP server integration, slash command processing, and configuration management across user/project levels. See tasks/architecture/arch_012.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Security Testing Automation",
+          "description": "Implement automated security testing for command injection prevention, permission bypasses, and API key handling",
+          "dependencies": [
+            1
+          ],
+          "details": "Create security test suite covering command injection attempts, permission system bypass attempts, secure API key storage validation, file path traversal prevention, and MCP server security boundaries. See tasks/architecture/arch_012.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Performance Benchmarking Tools",
+          "description": "Develop performance benchmarking suite to measure response times, memory usage, and API call efficiency",
+          "dependencies": [
+            1
+          ],
+          "details": "Create benchmarking tests for agent response times, memory consumption during long conversations, file operation performance, MCP server communication latency, and API rate limiting behavior. See tasks/architecture/arch_012.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "CI/CD Pipeline Setup",
+          "description": "Configure automated CI/CD pipeline with GitHub Actions for testing, linting, and deployment workflows",
+          "dependencies": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "details": "Set up GitHub Actions workflows for automated testing on push/PR, code quality checks with linting and type checking, security scanning, performance regression detection, and automated package publishing. See tasks/architecture/arch_012.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Cross-Platform Compatibility Validation",
+          "description": "Ensure and validate cross-platform compatibility across Windows, macOS, and Linux environments",
+          "dependencies": [
+            5
+          ],
+          "details": "Create platform-specific test scenarios, validate file path handling across OS types, test bash command execution on different shells, verify MCP server communication across platforms, and document platform-specific installation requirements. See tasks/architecture/arch_012.md for detailed implementation guidance.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "title": "Implement Monitoring and Metrics System",
+      "description": "Build monitoring system to track technical metrics, user experience metrics, and system health with automated alerting",
+      "details": "Create monitoring dashboard and automated alerting for: zero critical security vulnerabilities tracking, 95%+ uptime monitoring, sub-second response time measurement, 90%+ test coverage reporting, workflow completion tracking, user feedback collection system, development task timing analytics, health checks, performance profiling, and user analytics integration. See tasks/architecture/arch_013.md for detailed implementation guidance.",
+      "testStrategy": "Unit tests for monitoring components, integration tests for metrics collection, load testing for performance thresholds, security scanning automation, and end-to-end workflow testing with timing validation",
+      "priority": "medium",
+      "phase": "Phase 4: Architecture",
+      "dependencies": [
+        12
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Metrics Collection Infrastructure",
+          "description": "Implement core metrics collection system to gather performance data, system metrics, and application statistics",
+          "dependencies": [],
+          "details": "Set up metrics collection agents, define key performance indicators (KPIs), implement data aggregation pipelines, and establish storage mechanisms for time-series data. See tasks/architecture/arch_013.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Dashboard Development",
+          "description": "Create interactive monitoring dashboards for visualizing collected metrics and system status",
+          "dependencies": [
+            1
+          ],
+          "details": "Design and build web-based dashboards with real-time charts, graphs, and system health indicators. Include customizable views and drill-down capabilities. See tasks/architecture/arch_013.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Automated Alerting System",
+          "description": "Develop intelligent alerting mechanisms to notify stakeholders of system anomalies and threshold breaches",
+          "dependencies": [
+            1
+          ],
+          "details": "Implement alert rules engine, notification channels (email, SMS, Slack), escalation policies, and smart alert grouping to reduce noise. See tasks/architecture/arch_013.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Performance Profiling Tools",
+          "description": "Build comprehensive performance profiling and diagnostic tools for deep system analysis",
+          "dependencies": [
+            1
+          ],
+          "details": "Create code profilers, memory analyzers, database query performance tools, and bottleneck identification utilities with detailed reporting. See tasks/architecture/arch_013.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "User Analytics Integration",
+          "description": "Integrate user behavior analytics and usage tracking into the monitoring ecosystem",
+          "dependencies": [
+            2,
+            3
+          ],
+          "details": "Implement user journey tracking, feature usage analytics, conversion funnel monitoring, and integrate findings into dashboards and alerting systems. See tasks/architecture/arch_013.md for detailed implementation guidance.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Implement External Dependencies Health Check System",
+      "description": "Create system to monitor and validate external dependencies including xAI API, VS Code, system tools, and network connectivity",
+      "details": "Build health check system that validates external dependencies before operations: xAI API connectivity and authentication checks, VS Code installation verification for diff functionality, system tools availability validation, network connectivity testing for remote operations, graceful degradation when dependencies are unavailable, and clear error messages for users. See tasks/architecture/arch_014.md for detailed implementation guidance.",
+      "testStrategy": "Unit tests for each dependency checker, integration tests with mock failures, manual testing with actual dependency unavailability scenarios",
+      "priority": "medium",
+      "phase": "Phase 4: Architecture",
+      "dependencies": [
+        13
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "API Connectivity Validators",
+          "description": "Implement health checks to validate connectivity to the xAI Grok API endpoint",
+          "dependencies": [],
+          "details": "Create functions to test API authentication, endpoint availability, and response validation. Include timeout handling and error categorization for different failure types. See tasks/architecture/arch_014.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "System Tool Detection Mechanisms",
+          "description": "Develop mechanisms to detect and validate availability of system tools and dependencies",
+          "dependencies": [],
+          "details": "Check for required system tools like bash, available MCP servers, file system permissions, and Python environment dependencies. Provide clear feedback on missing components. See tasks/architecture/arch_014.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Network Connectivity Testing",
+          "description": "Implement network connectivity tests for external dependencies and MCP servers",
+          "dependencies": [],
+          "details": "Create network tests for internet connectivity, MCP server availability, and external resource access. Include DNS resolution checks and proxy handling. See tasks/architecture/arch_014.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Graceful Degradation Handlers",
+          "description": "Implement graceful degradation logic when health checks fail",
+          "dependencies": [
+            1,
+            2,
+            3
+          ],
+          "details": "Create fallback mechanisms and user-friendly error messages when health checks fail. Implement partial functionality modes and recovery suggestions based on specific failure patterns. See tasks/architecture/arch_014.md for detailed implementation guidance.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "title": "Implement Phased Rollout and Deployment System",
+      "description": "Create phased rollout deployment system with early access program, feature flags, and release management",
+      "details": "Develop deployment system supporting phased rollouts over 12 weeks: early access program functionality, feature flags for controlled feature releases, user segmentation for early access participants, rollback capabilities, monitoring dashboards for rollout progress, user adoption metrics tracking, and automated release management. See tasks/architecture/arch_015.md for detailed implementation guidance.",
+      "testStrategy": "Unit tests for feature flag logic, integration tests for rollout phases, end-to-end tests for early access program enrollment, load testing for gradual user onboarding, and rollback procedure validation",
+      "priority": "low",
+      "phase": "Phase 5: Advanced Features",
+      "dependencies": [
+        14
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Feature Flag Infrastructure",
+          "description": "Implement core feature flag system with configuration management, flag evaluation engine, and integration with existing codebase",
+          "dependencies": [],
+          "details": "Create feature flag service with Redis/database backend, flag evaluation logic, configuration UI, and SDK integration for runtime flag checking. See tasks/architecture/arch_015.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "User Segmentation Logic",
+          "description": "Build user segmentation system to target specific user groups based on attributes, behavior, and custom criteria",
+          "dependencies": [
+            1
+          ],
+          "details": "Implement user attribute collection, segmentation rules engine, percentage-based rollouts, and A/B testing capabilities with feature flag integration. See tasks/architecture/arch_015.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Early Access Program Management",
+          "description": "Create early access program system for managing beta users, invitations, and feature access controls",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Build invitation system, early access user management, feature access controls, feedback collection, and communication tools for beta programs. See tasks/architecture/arch_015.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Rollback Mechanisms",
+          "description": "Implement automated rollback system with circuit breakers, health checks, and emergency shutdown capabilities",
+          "dependencies": [
+            1
+          ],
+          "details": "Create rollback automation, circuit breaker patterns, health monitoring, error rate thresholds, and emergency kill switches for feature flags. See tasks/architecture/arch_015.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Adoption Metrics Tracking",
+          "description": "Build comprehensive metrics system to track feature adoption, user engagement, and performance impact",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Implement metrics collection, analytics dashboard, adoption rate tracking, user engagement metrics, and performance impact monitoring. See tasks/architecture/arch_015.md for detailed implementation guidance.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Automated Release Management",
+          "description": "Create automated release management system with progressive rollouts, deployment pipelines, and release orchestration",
+          "dependencies": [
+            1,
+            2,
+            4,
+            5
+          ],
+          "details": "Build deployment automation, progressive rollout scheduling, release pipeline integration, environment promotion, and automated decision-making based on metrics. See tasks/architecture/arch_015.md for detailed implementation guidance.",
+          "status": "pending"
+        }
+      ]
+    }
+  ]
+}
