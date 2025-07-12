@@ -6,9 +6,11 @@ import os
 import click
 from .config import update_permissions
 from .security import SecurityManager, SecurityError
+from .file_operations import FileOperations
 
-# Initialize security manager
+# Initialize security manager and file operations
 security_manager = SecurityManager()
+file_ops = FileOperations(security_manager)
 
 TOOLS = [
     {
@@ -40,7 +42,78 @@ TOOLS = [
             },
         },
     },
-    # Add more tools like read_file, etc., if needed
+    {
+        "type": "function",
+        "function": {
+            "name": "read_file",
+            "description": "Read file content with optional line numbers and range selection",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "file_path": {"type": "string", "description": "Path to the file to read"},
+                    "show_line_numbers": {"type": "boolean", "description": "Show line numbers"},
+                    "start_line": {"type": "integer", "description": "Starting line number"},
+                    "max_lines": {"type": "integer", "description": "Maximum lines to read"}
+                },
+                "required": ["file_path"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "list_files",
+            "description": "List files in directory with filtering options",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "directory_path": {"type": "string", "description": "Directory path to list"},
+                    "show_hidden": {"type": "boolean", "description": "Show hidden files"},
+                    "recursive": {"type": "boolean", "description": "Recursive directory listing"},
+                    "pattern": {"type": "string", "description": "File name pattern to match"},
+                    "file_types": {"type": "array", "items": {"type": "string"}, "description": "File extensions to filter"}
+                },
+                "required": [],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "find_files",
+            "description": "Find files matching pattern in filename",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "search_pattern": {"type": "string", "description": "Pattern to search for"},
+                    "search_path": {"type": "string", "description": "Path to search in"},
+                    "case_sensitive": {"type": "boolean", "description": "Case sensitive search"},
+                    "file_types": {"type": "array", "items": {"type": "string"}, "description": "File extensions to search"},
+                    "max_results": {"type": "integer", "description": "Maximum results to return"}
+                },
+                "required": ["search_pattern"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "grep_files",
+            "description": "Search for pattern within file contents",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "search_pattern": {"type": "string", "description": "Pattern to search for"},
+                    "search_path": {"type": "string", "description": "Path to search in"},
+                    "case_sensitive": {"type": "boolean", "description": "Case sensitive search"},
+                    "context_lines": {"type": "integer", "description": "Number of context lines"},
+                    "file_types": {"type": "array", "items": {"type": "string"}, "description": "File extensions to search"},
+                    "max_results": {"type": "integer", "description": "Maximum results to return"}
+                },
+                "required": ["search_pattern"],
+            },
+        },
+    }
 ]
 
 def handle_tool_call(tool_call, mode, permissions):
@@ -138,3 +211,58 @@ def handle_tool_call(tool_call, mode, permissions):
                     return {"tool_call_id": tool_call.id, "output": str(e)}
             else:
                 return {"tool_call_id": tool_call.id, "output": "Command interrupted."}
+    
+    elif func_name == "read_file":
+        if mode == "planning":
+            return {"tool_call_id": tool_call.id, "output": f"Plan to read file: {args.get('file_path', 'unknown')}"}
+        
+        result = file_ops.read_file(**args)
+        return {"tool_call_id": tool_call.id, "output": json.dumps(result, indent=2)}
+    
+    elif func_name == "list_files":
+        if mode == "planning":
+            return {"tool_call_id": tool_call.id, "output": f"Plan to list files in: {args.get('directory_path', '.')}"}
+        
+        result = file_ops.list_files(**args)
+        # Convert FileInfo objects to dictionaries for JSON serialization
+        if 'files' in result:
+            result['files'] = [
+                {
+                    'path': f.path,
+                    'name': f.name,
+                    'size': f.size,
+                    'size_formatted': f.size_formatted,
+                    'is_directory': f.is_directory,
+                    'is_binary': f.is_binary,
+                    'modified_time': f.modified_time,
+                    'permissions': f.permissions
+                } for f in result['files']
+            ]
+        return {"tool_call_id": tool_call.id, "output": json.dumps(result, indent=2)}
+    
+    elif func_name == "find_files":
+        if mode == "planning":
+            return {"tool_call_id": tool_call.id, "output": f"Plan to find files matching: {args.get('search_pattern', 'unknown')}"}
+        
+        result = file_ops.find_files(**args)
+        return {"tool_call_id": tool_call.id, "output": json.dumps(result, indent=2)}
+    
+    elif func_name == "grep_files":
+        if mode == "planning":
+            return {"tool_call_id": tool_call.id, "output": f"Plan to search for pattern: {args.get('search_pattern', 'unknown')}"}
+        
+        result = file_ops.grep_files(**args)
+        # Convert SearchResult objects to dictionaries for JSON serialization
+        if 'results' in result:
+            result['results'] = [
+                {
+                    'file_path': r.file_path,
+                    'line_number': r.line_number,
+                    'line_content': r.line_content,
+                    'match_start': r.match_start,
+                    'match_end': r.match_end,
+                    'context_before': r.context_before,
+                    'context_after': r.context_after
+                } for r in result['results']
+            ]
+        return {"tool_call_id": tool_call.id, "output": json.dumps(result, indent=2)}
