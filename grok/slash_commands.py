@@ -5,7 +5,6 @@ import webbrowser
 import json
 import click
 from .config import set_api_key, set_mode, update_permissions, load_settings, update_mcp_servers, get_mcp_servers
-from .agent import call_api
 from prompt_toolkit import print_formatted_text, HTML
 
 def handle_slash_command(command, history):
@@ -20,6 +19,8 @@ def handle_slash_command(command, history):
         print("API key saved.")
     
     elif cmd == 'init':
+        # Import call_api only when needed to avoid circular import
+        from .agent import call_api
         file_list = '\n'.join(glob.glob('**/*', recursive=True, include_hidden=False))
         response = call_api([{"role": "user", "content": f"Analyze this project file list and document your understanding:\n{file_list}"}])
         with open('GROK.md', 'w') as f:

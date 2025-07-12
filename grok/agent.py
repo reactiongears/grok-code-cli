@@ -6,7 +6,12 @@ import subprocess
 import os
 from .config import load_settings, get_mode, get_mcp_servers, get_permissions
 from .tools import TOOLS, handle_tool_call
+from .security import SecurityManager, SecurityError
+from .slash_commands import handle_slash_command
 from prompt_toolkit import prompt, PromptSession
+
+# Initialize security manager
+security_manager = SecurityManager()
 
 # Initialize session for consistent prompt handling
 session = PromptSession()
@@ -17,8 +22,22 @@ def call_api(messages, tools=None, api_key=None):
     """
     Make API call with per-request API key passing for better security
     """
+    # Rate limiting check
+    if not security_manager.rate_limiter.check_rate_limit('api_calls', 'api_calls'):
+        security_manager.log_security_event('rate_limit_exceeded', {
+            'limit_type': 'api_calls', 'action': 'call_api'
+        })
+        raise SecurityError("API rate limit exceeded")
+    
+    # Validate API key
     if api_key is None:
         api_key = load_settings().get('api_key')
+    
+    if not api_key:
+        security_manager.log_security_event('missing_api_key', {
+            'action': 'call_api'
+        })
+        raise SecurityError("No API key provided")
     
     # Create client instance with API key per request
     client = openai.OpenAI(
@@ -80,6 +99,14 @@ def agent_loop(initial_prompt=None):
     while True:
         if not history or history[-1].get("role") == "assistant":
             user_input = session.prompt('> ')
+            
+            # Sanitize user input for security
+            try:
+                user_input = security_manager.validate_input(user_input)
+            except SecurityError as e:
+                print(f"Input validation failed: {e}")
+                continue
+            
             if user_input.startswith('/'):
                 handle_slash_command(user_input, history)
                 continue
