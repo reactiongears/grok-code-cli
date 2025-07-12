@@ -4,6 +4,7 @@ import subprocess
 import tempfile
 import os
 import click
+from .config import update_permissions
 
 TOOLS = [
     {

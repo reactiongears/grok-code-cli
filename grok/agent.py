@@ -4,22 +4,36 @@ import re
 import json
 import subprocess
 import os
-from .config import load_settings, get_mode, get_mcp_servers
+from .config import load_settings, get_mode, get_mcp_servers, get_permissions
 from .tools import TOOLS, handle_tool_call
+from prompt_toolkit import prompt, PromptSession
 
-openai.api_key = load_settings().get('api_key')
-openai.base_url = "https://api.x.ai/v1"
+# Initialize session for consistent prompt handling
+session = PromptSession()
 
 SYSTEM_PROMPT = "You are Grok 4, a helpful coding assistant. Use tools to edit code or run commands as needed."
 
-def call_api(messages, tools=None):
+def call_api(messages, tools=None, api_key=None):
+    """
+    Make API call with per-request API key passing for better security
+    """
+    if api_key is None:
+        api_key = load_settings().get('api_key')
+    
+    # Create client instance with API key per request
+    client = openai.OpenAI(
+        api_key=api_key,
+        base_url="https://api.x.ai/v1"
+    )
+    
     params = {
         "model": load_settings().get('model', 'grok-4'),
         "messages": [{"role": "system", "content": SYSTEM_PROMPT}] + messages,
     }
     if tools:
         params["tools"] = tools
-    response = openai.chat.completions.create(**params)
+    
+    response = client.chat.completions.create(**params)
     return response
 
 def fetch_from_mcp(server, action_type, *args):
@@ -65,7 +79,7 @@ def agent_loop(initial_prompt=None):
     
     while True:
         if not history or history[-1].get("role") == "assistant":
-            user_input = prompt_toolkit.prompt('> ')
+            user_input = session.prompt('> ')
             if user_input.startswith('/'):
                 handle_slash_command(user_input, history)
                 continue

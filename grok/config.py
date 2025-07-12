@@ -7,6 +7,13 @@ PROJECT_CONFIG = '.grok/settings.json'
 
 os.makedirs(CONFIG_DIR, exist_ok=True)
 
+# Explicit exports for better module interface
+__all__ = [
+    'load_settings', 'save_settings', 'get_api_key', 'set_api_key',
+    'get_mode', 'set_mode', 'get_permissions', 'update_permissions',
+    'get_mcp_servers', 'update_mcp_servers'
+]
+
 def load_settings():
     user_settings_path = os.path.join(CONFIG_DIR, 'settings.json')
     user_settings = {}
