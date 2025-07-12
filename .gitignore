@@ -14,7 +14,6 @@ node_modules/
 
 # Editor directories and files
 .idea
-.vscode
 *.suo
 *.ntvs*
 *.njsproj
@@ -29,3 +28,6 @@ node_modules/
 /.cursor
 .windsurfrules
 .roomodes
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore
